@@ -1,0 +1,12 @@
+checkpoints/
+logs/
+swanlog/
+data/
+__pycache__/
+.idea/
+src/.ipynb_checkpoints/
+*.pyc
+*.pt
+*.bin
+demo3/
+*.out
