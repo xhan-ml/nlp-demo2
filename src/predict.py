@@ -1,33 +1,55 @@
+import os
+os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 import torch
-from transformers import BertTokenizer
 from src.config import ConfigManager
 from src.model import BertNERModel
 from src.utils import find_latest_model, NEREntityMetric
+from src.dataset import NerDataset
+from transformers import AutoTokenizer
+
 
 
 def main():
     # 1. 加载配置
-    cfg = ConfigManager.load_from_json("checkpoints/test/experiment_config.json")
+    cfg = ConfigManager.load_from_json("checkpoints/weibo_bert_wwm_v3/experiment_config.json")
 
-    # 2. 加载分词器
-    tokenizer = BertTokenizer.from_pretrained(cfg.model.pretrain_name)
+    print("class_path路径：", cfg.data.class_path)
 
-    # 3. 构造 id2label（和 dataset 保持一致）
-    if cfg.data.class_path is not None:
-        with open(cfg.data.class_path, "r", encoding="utf-8") as f:
-            label_list = [line.strip() for line in f if line.strip()]
-    else:
-        label_list = ["O", "B-PER", "I-PER", "B-LOC", "I-LOC", "B-ORG", "I-ORG"]
-    id2label = {i: lab for i, lab in enumerate(label_list)}
+    tokenizer = AutoTokenizer.from_pretrained(cfg.model.pretrain_name) 
+
+    train_ds = NerDataset(
+        data_path=cfg.data.train_path,
+        class_path=cfg.data.class_path,
+        tokenizer=tokenizer,
+        max_len=cfg.train.max_len
+    )
+  
+    id2label = train_ds.id2label
+    label_list = list(id2label.values())
+
+
+        
+    print("label_list = ", label_list)
+    print("标签总数num_labels = ", len(label_list))
+
+
+   
+
+   
     num_labels = len(label_list)
 
     # 4. 初始化模型 + 加载最优权重
     model = BertNERModel(pretrain_name=cfg.model.pretrain_name, num_labels=num_labels)
-    model_path = find_latest_model(model_dir="checkpoint")  # 你的实验保存根目录
+
+
+    cfg_dir = os.path.dirname("checkpoints/weibo_bert_wwm_v3/experiment_config.json")
+    model_path = find_latest_model(model_dir=cfg_dir)  
+    
     print(f"加载模型权重: {model_path}")
     state_dict = torch.load(model_path, map_location="cpu")
     model.load_state_dict(state_dict)
@@ -63,6 +85,11 @@ def main():
             continue  # CLS / SEP
         char_pred_ids.append(pid)
 
+
+    print("char_pred_ids 标签id序列：", char_pred_ids)
+
+
+    
     # 9. 解码实体
     pred_ents = NEREntityMetric.extract_entities(char_pred_ids, id2label)
 
