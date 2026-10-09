@@ -39,7 +39,7 @@ pip install torch transformers swanlab
 - 预训练模型：`bert-base-chinese`、`hfl/chinese-bert-wwm`
 - 数据集：Weibo 、MSRA
 - 超参统一：`batch_size=8`，`lr=2e-5`，`epoch=10`，`max_len=128`，dropout=0.2
-- 优化器：AdamW，带线性学习率预热
+- 优化器：AdamW
 - 早停策略：基于验证集 F1 指标，防止过拟合
 - 评价指标：Precision、Recall、F1
 
