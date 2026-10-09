@@ -1,0 +1,30 @@
+{
+  "project": {
+    "project": "mini_bert_ner",
+    "experiment_name": "msra_bert_base_v3"
+  },
+  "model": {
+    "pretrain_name": "bert-base-chinese"
+  },
+  "data": {
+    "train_path": "/root/autodl-tmp/nlp-demo2/data/MSRA/train_5k.txt",
+    "dev_path": "/root/autodl-tmp/nlp-demo2/data/MSRA/dev_1k.txt",
+    "test_path": "/root/autodl-tmp/nlp-demo2/data/MSRA/test_1k.txt",
+    "class_path": null
+  },
+  "train": {
+    "seed": 42,
+    "epoch": 10,
+    "batch_size": 8,
+    "max_len": 128,
+    "lr": 2e-05,
+    "warmup_rate": 0.1,
+    "early_stop_patience": 3,
+    "dropout": 0.2,
+    "grad_clip_norm": 1.0
+  },
+  "save": {
+    "model_dir": "/root/autodl-tmp/nlp-demo2/checkpoints/msra_bert_base_v3",
+    "log_dir": "/root/autodl-tmp/nlp-demo2/logs/msra_bert_base_v3"
+  }
+}

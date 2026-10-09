@@ -1,0 +1,30 @@
+{
+  "project": {
+    "project": "mini_bert_ner",
+    "experiment_name": "weibo_bert_wwm_v3"
+  },
+  "model": {
+    "pretrain_name": "hfl/chinese-bert-wwm"
+  },
+  "data": {
+    "train_path": "/root/autodl-tmp/nlp-demo2/data/weibo/train.txt",
+    "dev_path": "/root/autodl-tmp/nlp-demo2/data/weibo/dev.txt",
+    "test_path": "/root/autodl-tmp/nlp-demo2/data/weibo/test.txt",
+    "class_path": "/root/autodl-tmp/nlp-demo2/data/weibo/class.txt"
+  },
+  "train": {
+    "seed": 42,
+    "epoch": 10,
+    "batch_size": 8,
+    "max_len": 128,
+    "lr": 2e-05,
+    "warmup_rate": 0.1,
+    "early_stop_patience": 3,
+    "dropout": 0.1,
+    "grad_clip_norm": 1.0
+  },
+  "save": {
+    "model_dir": "/root/autodl-tmp/nlp-demo2/checkpoints/weibo_bert_wwm_v3",
+    "log_dir": "/root/autodl-tmp/nlp-demo2/logs/weibo_bert_wwm_v3"
+  }
+}
