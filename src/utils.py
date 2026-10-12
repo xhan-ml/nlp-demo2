@@ -99,7 +99,7 @@ class NEREntityMetric:
             self.total_pred_entities += len(pred_ents)
             self.total_true_entities += len(true_ents)
 
-    def compute(self) -> dict:
+    def compute(self):
     
         precision = self.total_tp / self.total_pred_entities if self.total_pred_entities > 0 else 0.0
         recall = self.total_tp / self.total_true_entities if self.total_true_entities > 0 else 0.0
