@@ -18,15 +18,15 @@ def main():
     # 1. 加载配置
     cfg = ConfigManager.load_from_json("checkpoints/weibo_bert_wwm_v3/experiment_config.json")
 
-    print("class_path路径：", cfg.data.class_path)
+    print("class_path路径：", cfg.class_path)
 
-    tokenizer = AutoTokenizer.from_pretrained(cfg.model.pretrain_name) 
+    tokenizer = AutoTokenizer.from_pretrained(cfg.pretrain_name) 
 
     train_ds = NerDataset(
-        data_path=cfg.data.train_path,
-        class_path=cfg.data.class_path,
+        data_path=cfg.train_path,
+        class_path=cfg.class_path,
         tokenizer=tokenizer,
-        max_len=cfg.train.max_len
+        max_len=cfg.max_len
     )
   
     id2label = train_ds.id2label
@@ -44,7 +44,7 @@ def main():
     num_labels = len(label_list)
 
     # 4. 初始化模型 + 加载最优权重
-    model = BertNERModel(pretrain_name=cfg.model.pretrain_name, num_labels=num_labels)
+    model = BertNERModel(pretrain_name=cfg.pretrain_name, num_labels=num_labels)
 
 
     cfg_dir = os.path.dirname("checkpoints/weibo_bert_wwm_v3/experiment_config.json")
@@ -65,7 +65,7 @@ def main():
         chars,
         is_split_into_words=True,
         truncation=True,
-        max_length=cfg.train.max_len,
+        max_length=cfg.max_len,
         padding=False,
         return_attention_mask=True,
     )

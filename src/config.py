@@ -4,23 +4,17 @@ import argparse
 from dataclasses import dataclass
 
 @dataclass
-class ProjectConfig:
+class Config:
     project: str
     experiment_name: str
 
-@dataclass
-class ModelConfig:
     pretrain_name: str
 
-@dataclass
-class DataConfig:
     train_path: str
     dev_path: str
     test_path: str
     class_path: str | None  
 
-@dataclass
-class TrainConfig:
     seed: int
     epoch: int
     batch_size: int
@@ -31,10 +25,10 @@ class TrainConfig:
     dropout: float
     grad_clip_norm: float
 
-@dataclass
-class SaveConfig:
+
     model_dir: str
     log_dir: str
+
 
 
 class ConfigManager:
@@ -92,34 +86,30 @@ class ConfigManager:
          
       
         cfg_dict = {
-            "project": {
-                "project": "mini_bert_ner",
-                "experiment_name": args.exp_name
-            },
-            "model": {
-                "pretrain_name": args.pretrain_name
-            },
-            "data": {
-                "train_path": train_path,
-                "dev_path": dev_path,
-                "test_path": test_path,
-                "class_path": class_path
-            },
-            "train": {
-                "seed": args.seed,
-                "epoch": args.epoch,
-                "batch_size": args.batch_size,
-                "max_len": args.max_len,
-                "lr": args.lr,
-                "warmup_rate": args.warmup_rate,
-                "early_stop_patience": args.early_stop_patience,
-                "dropout": args.dropout,
-                "grad_clip_norm": args.grad_clip_norm
-            },
-            "save": {
-                "model_dir": model_dir,
-                "log_dir": log_dir
-            }
+          
+            "project": "mini_bert_ner",
+            "experiment_name": args.exp_name,
+        
+            "pretrain_name": args.pretrain_name,
+      
+            "train_path": train_path,
+            "dev_path": dev_path,
+            "test_path": test_path,
+            "class_path": class_path,
+
+            "seed": args.seed,
+            "epoch": args.epoch,
+            "batch_size": args.batch_size,
+            "max_len": args.max_len,
+            "lr": args.lr,
+            "warmup_rate": args.warmup_rate,
+            "early_stop_patience": args.early_stop_patience,
+            "dropout": args.dropout,
+            "grad_clip_norm": args.grad_clip_norm,
+     
+            "model_dir": model_dir,
+            "log_dir": log_dir
+            
         }
        
         json_save_path = os.path.join(model_dir, "experiment_config.json")
@@ -133,11 +123,7 @@ class ConfigManager:
 
         with open(json_path, "r", encoding="utf-8") as f:
             raw = json.load(f)
-        project = ProjectConfig(**raw["project"])
-        model = ModelConfig(**raw["model"])
-        data = DataConfig(**raw["data"])
-        train = TrainConfig(**raw["train"])
-        save = SaveConfig(**raw["save"])
+        return Config(**raw)
      
         class ConfigWrap:
             def __init__(self, p, m, d, t, s):
